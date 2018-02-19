@@ -23,7 +23,15 @@
       "dummy"
     ],
     "resources": {
-      "media": []
+      "media": [
+        {
+            "file": "images/poogie.png",
+            "name": "IMAGE_POOGIE",
+            "storageFormat": "png",
+            "targetPlatforms": null,
+            "type": "bitmap"
+        }
+      ]
     }
   }
 }
