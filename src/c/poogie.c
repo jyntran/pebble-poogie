@@ -39,7 +39,7 @@ static void prv_window_load(Window *window) {
   bitmap_layer_set_bitmap(s_background_layer, s_bitmap_poogie);
   layer_add_child(window_layer, bitmap_layer_get_layer(s_background_layer));
 
-  s_time_layer = text_layer_create(GRect(0, bounds.size.h-85, bounds.size.w, 50));
+  s_time_layer = text_layer_create(GRect(0, bounds.size.h-90, bounds.size.w, 45));
   text_layer_set_font(s_time_layer, fonts_get_system_font(FONT_KEY_LECO_36_BOLD_NUMBERS));
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
   text_layer_set_background_color(s_time_layer, GColorClear);
@@ -47,7 +47,7 @@ static void prv_window_load(Window *window) {
   update_time();
   layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
 
-  s_date_layer = text_layer_create(GRect(0, bounds.size.h-45, bounds.size.w, 35));
+  s_date_layer = text_layer_create(GRect(0, bounds.size.h-50, bounds.size.w, 45));
   text_layer_set_font(s_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
   text_layer_set_text_alignment(s_date_layer, GTextAlignmentCenter);
   text_layer_set_background_color(s_date_layer, GColorClear);
