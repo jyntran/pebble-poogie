@@ -29,6 +29,17 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   }
 }
 
+static void bluetooth_callback(bool connected) {
+  if (!connected) {   
+    static const uint32_t const segments[] = { 300, 300, 300, 300, 300 };
+    VibePattern pat = {
+      .durations = segments,
+      .num_segments = ARRAY_LENGTH(segments),
+    };
+    vibes_enqueue_custom_pattern(pat);
+  }
+}
+
 static void prv_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
@@ -54,6 +65,8 @@ static void prv_window_load(Window *window) {
   text_layer_set_text_color(s_date_layer, GColorBlack);
   update_date();
   layer_add_child(window_layer, text_layer_get_layer(s_date_layer));
+
+ bluetooth_callback(connection_service_peek_pebble_app_connection());
 }
 
 static void prv_window_unload(Window *window) {
@@ -65,6 +78,9 @@ static void prv_window_unload(Window *window) {
 
 static void prv_init(void) {
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+  connection_service_subscribe((ConnectionHandlers) {
+    .pebble_app_connection_handler = bluetooth_callback
+  });
   s_window = window_create();
   window_set_window_handlers(s_window, (WindowHandlers) {
     .load = prv_window_load,
@@ -77,6 +93,7 @@ static void prv_init(void) {
 static void prv_deinit(void) {
   window_destroy(s_window);
   tick_timer_service_unsubscribe();
+  connection_service_unsubscribe();
 }
 
 int main(void) {
