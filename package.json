@@ -30,6 +30,90 @@
             "storageFormat": "png",
             "targetPlatforms": null,
             "type": "bitmap"
+        },
+        {
+            "file": "images/poogie_angry.png",
+            "name": "IMAGE_POOGIE_ANGRY",
+            "storageFormat": "png",
+            "targetPlatforms": null,
+            "type": "bitmap"
+        },
+        {
+            "file": "images/sharp100.png",
+            "name": "IMAGE_SHARP100",
+            "storageFormat": "png",
+            "targetPlatforms": null,
+            "type": "bitmap"
+        },
+        {
+            "file": "images/sharp090.png",
+            "name": "IMAGE_SHARP090",
+            "storageFormat": "png",
+            "targetPlatforms": null,
+            "type": "bitmap"
+        },
+        {
+            "file": "images/sharp080.png",
+            "name": "IMAGE_SHARP080",
+            "storageFormat": "png",
+            "targetPlatforms": null,
+            "type": "bitmap"
+        },
+        {
+            "file": "images/sharp070.png",
+            "name": "IMAGE_SHARP070",
+            "storageFormat": "png",
+            "targetPlatforms": null,
+            "type": "bitmap"
+        },
+        {
+            "file": "images/sharp060.png",
+            "name": "IMAGE_SHARP060",
+            "storageFormat": "png",
+            "targetPlatforms": null,
+            "type": "bitmap"
+        },
+        {
+            "file": "images/sharp050.png",
+            "name": "IMAGE_SHARP050",
+            "storageFormat": "png",
+            "targetPlatforms": null,
+            "type": "bitmap"
+        },
+        {
+            "file": "images/sharp040.png",
+            "name": "IMAGE_SHARP040",
+            "storageFormat": "png",
+            "targetPlatforms": null,
+            "type": "bitmap"
+        },
+        {
+            "file": "images/sharp030.png",
+            "name": "IMAGE_SHARP030",
+            "storageFormat": "png",
+            "targetPlatforms": null,
+            "type": "bitmap"
+        },
+        {
+            "file": "images/sharp020.png",
+            "name": "IMAGE_SHARP020",
+            "storageFormat": "png",
+            "targetPlatforms": null,
+            "type": "bitmap"
+        },
+        {
+            "file": "images/sharp010.png",
+            "name": "IMAGE_SHARP010",
+            "storageFormat": "png",
+            "targetPlatforms": null,
+            "type": "bitmap"
+        },
+        {
+            "file": "images/sharp000.png",
+            "name": "IMAGE_SHARP000",
+            "storageFormat": "png",
+            "targetPlatforms": null,
+            "type": "bitmap"
         }
       ]
     }
