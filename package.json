@@ -39,6 +39,13 @@
             "type": "bitmap"
         },
         {
+            "file": "images/poogie_heart.png",
+            "name": "IMAGE_POOGIE_HEART",
+            "storageFormat": "png",
+            "targetPlatforms": null,
+            "type": "bitmap"
+        },
+        {
             "file": "images/sharp100.png",
             "name": "IMAGE_SHARP100",
             "storageFormat": "png",

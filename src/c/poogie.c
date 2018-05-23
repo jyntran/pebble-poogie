@@ -1,9 +1,12 @@
 #include <pebble.h>
 
 static Window *s_window;
-static TextLayer *s_time_layer, *s_date_layer;
+static TextLayer *s_time_layer,
+                 *s_date_layer;
 static BitmapLayer *s_background_layer;
-static GBitmap *s_bitmap_poogie;
+static GBitmap *s_bitmap_poogie,
+               *s_bitmap_poogie_angry,
+               *s_bitmap_poogie_heart;
 static BitmapLayer *s_battery_layer;
 static GBitmap *s_bitmap_battery;
 
@@ -16,6 +19,8 @@ static void update_time() {
   strftime(s_buffer, sizeof(s_buffer), clock_is_24h_style() ?
                                           "%H:%M" : "%I:%M", tick_time);
   text_layer_set_text(s_time_layer, s_buffer);
+
+  bitmap_layer_set_bitmap(s_background_layer, s_bitmap_poogie);
 }
 
 static void update_date() {
@@ -84,11 +89,10 @@ static void bluetooth_callback(bool connected) {
       .num_segments = ARRAY_LENGTH(segments),
     };
     vibes_enqueue_custom_pattern(pat);
-    s_bitmap_poogie = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_POOGIE_ANGRY);
+    bitmap_layer_set_bitmap(s_background_layer, s_bitmap_poogie_angry);
   } else {
-    s_bitmap_poogie = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_POOGIE);
+    bitmap_layer_set_bitmap(s_background_layer, s_bitmap_poogie_heart);
   }
-  bitmap_layer_set_bitmap(s_background_layer, s_bitmap_poogie);
 }
 
 static void prv_window_load(Window *window) {
@@ -98,18 +102,20 @@ static void prv_window_load(Window *window) {
   s_background_layer = bitmap_layer_create(GRect(0, 20, bounds.size.w, 65));
   bitmap_layer_set_compositing_mode(s_background_layer, GCompOpSet);
   s_bitmap_poogie = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_POOGIE);
+  s_bitmap_poogie_angry = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_POOGIE_ANGRY);
+  s_bitmap_poogie_heart = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_POOGIE_HEART);
   bitmap_layer_set_bitmap(s_background_layer, s_bitmap_poogie);
   layer_add_child(window_layer, bitmap_layer_get_layer(s_background_layer));
 
-  s_time_layer = text_layer_create(GRect(0, bounds.size.h-90, bounds.size.w, 45));
-  text_layer_set_font(s_time_layer, fonts_get_system_font(FONT_KEY_LECO_36_BOLD_NUMBERS));
+  s_time_layer = text_layer_create(GRect(0, bounds.size.h-85, bounds.size.w, 40));
+  text_layer_set_font(s_time_layer, fonts_get_system_font(FONT_KEY_LECO_32_BOLD_NUMBERS));
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_text_color(s_time_layer, GColorBlack);
   update_time();
   layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
 
-  s_date_layer = text_layer_create(GRect(0, bounds.size.h-50, bounds.size.w, 45));
+  s_date_layer = text_layer_create(GRect(0, bounds.size.h-50, bounds.size.w, 40));
   text_layer_set_font(s_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
   text_layer_set_text_alignment(s_date_layer, GTextAlignmentCenter);
   text_layer_set_background_color(s_date_layer, GColorClear);
@@ -117,9 +123,9 @@ static void prv_window_load(Window *window) {
   update_date();
   layer_add_child(window_layer, text_layer_get_layer(s_date_layer));
 
-  s_battery_layer = bitmap_layer_create(GRect(1, 2, bounds.size.w-2, 25));
+  s_battery_layer = bitmap_layer_create(GRect(0, 2, bounds.size.w, 25));
   bitmap_layer_set_compositing_mode(s_battery_layer, GCompOpSet);
-  bitmap_layer_set_alignment(s_battery_layer, GAlignLeft);
+  bitmap_layer_set_alignment(s_battery_layer, GAlignCenter);
   battery_callback(battery_state_service_peek());
   bitmap_layer_set_bitmap(s_battery_layer, s_bitmap_battery);
   layer_add_child(window_layer, bitmap_layer_get_layer(s_battery_layer));  
@@ -129,6 +135,8 @@ static void prv_window_load(Window *window) {
 
 static void prv_window_unload(Window *window) {
   gbitmap_destroy(s_bitmap_poogie);
+  gbitmap_destroy(s_bitmap_poogie_angry);
+  gbitmap_destroy(s_bitmap_poogie_heart);
   gbitmap_destroy(s_bitmap_battery);
   text_layer_destroy(s_time_layer);
   text_layer_destroy(s_date_layer);
