@@ -40,16 +40,16 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 }
 
 static void batt_update_proc(Layer *layer, GContext *ctx) {
-  GRect red1 = GRect(36, 10, 8, 8);
-  GRect red2 = GRect(44, 10, 8, 8);
-  GRect orange1 = GRect(52, 10, 8, 8);
-  GRect orange2 = GRect(60, 10, 8, 8);
-  GRect yellow1 = GRect(68, 10, 8, 8);
-  GRect yellow2 = GRect(76, 10, 8, 8);
-  GRect green1 = GRect(84, 10, 8, 8);
-  GRect green2 = GRect(92, 10, 8, 8);
-  GRect blue = GRect(100, 10, 8, 8);
-  GRect white = GRect(108, 10, 4, 8);
+  GRect red1 = GRect(PBL_IF_ROUND_ELSE(54, 36), PBL_IF_ROUND_ELSE(23, 10), 8, 8);
+  GRect red2 = GRect(PBL_IF_ROUND_ELSE(62, 44), PBL_IF_ROUND_ELSE(23, 10), 8, 8);
+  GRect orange1 = GRect(PBL_IF_ROUND_ELSE(70, 52), PBL_IF_ROUND_ELSE(23, 10), 8, 8);
+  GRect orange2 = GRect(PBL_IF_ROUND_ELSE(78, 60), PBL_IF_ROUND_ELSE(23, 10), 8, 8);
+  GRect yellow1 = GRect(PBL_IF_ROUND_ELSE(86, 68), PBL_IF_ROUND_ELSE(23, 10), 8, 8);
+  GRect yellow2 = GRect(PBL_IF_ROUND_ELSE(94, 76), PBL_IF_ROUND_ELSE(23, 10), 8, 8);
+  GRect green1 = GRect(PBL_IF_ROUND_ELSE(102, 84), PBL_IF_ROUND_ELSE(23, 10), 8, 8);
+  GRect green2 = GRect(PBL_IF_ROUND_ELSE(110, 92), PBL_IF_ROUND_ELSE(23, 10), 8, 8);
+  GRect blue = GRect(PBL_IF_ROUND_ELSE(118, 100), PBL_IF_ROUND_ELSE(23, 10), 8, 8);
+  GRect white = GRect(PBL_IF_ROUND_ELSE(126, 108), PBL_IF_ROUND_ELSE(23, 10), 4, 8);
 
   if (s_battery_level > 0) {
     graphics_context_set_fill_color(ctx, PBL_IF_BW_ELSE(GColorWhite, GColorRed));
@@ -112,7 +112,7 @@ static void prv_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
-  s_background_layer = bitmap_layer_create(GRect(0, 20, bounds.size.w, 65));
+  s_background_layer = bitmap_layer_create(GRect(0, PBL_IF_ROUND_ELSE(33, 20), bounds.size.w, 65));
   bitmap_layer_set_compositing_mode(s_background_layer, GCompOpSet);
   s_bitmap_poogie = gbitmap_create_with_resource(PBL_IF_BW_ELSE(RESOURCE_ID_IMAGE_POOGIEBW, RESOURCE_ID_IMAGE_POOGIE));
   s_bitmap_poogie_angry = gbitmap_create_with_resource(PBL_IF_BW_ELSE(RESOURCE_ID_IMAGE_POOGIEBW_ANGRY, RESOURCE_ID_IMAGE_POOGIE_ANGRY));
@@ -136,7 +136,7 @@ static void prv_window_load(Window *window) {
   update_date();
   layer_add_child(window_layer, text_layer_get_layer(s_date_layer));
 
-  s_battery_layer = bitmap_layer_create(GRect(0, 2, bounds.size.w, 25));
+  s_battery_layer = bitmap_layer_create(GRect(0, PBL_IF_ROUND_ELSE(15, 2), bounds.size.w, 25));
   bitmap_layer_set_compositing_mode(s_battery_layer, GCompOpSet);
   bitmap_layer_set_alignment(s_battery_layer, GAlignCenter);
   s_bitmap_battery = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_SHARP000);
