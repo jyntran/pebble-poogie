@@ -9,6 +9,7 @@ static GBitmap *s_bitmap_poogie,
                *s_bitmap_poogie_heart;
 static BitmapLayer *s_battery_layer;
 static GBitmap *s_bitmap_battery;
+static Layer *s_batt_layer;
 
 static int s_battery_level;
 
@@ -38,47 +39,59 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   }
 }
 
-static void update_battery() {
-  switch(s_battery_level) {
-    case 100:
-      s_bitmap_battery = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_SHARP100);
-      break;
-    case 90:
-      s_bitmap_battery = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_SHARP090);
-      break;
-    case 80:
-      s_bitmap_battery = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_SHARP080);
-      break;
-    case 70:
-      s_bitmap_battery = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_SHARP070);
-      break;
-    case 60:
-      s_bitmap_battery = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_SHARP060);
-      break;
-    case 50:
-      s_bitmap_battery = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_SHARP050);
-      break;
-    case 40:
-      s_bitmap_battery = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_SHARP040);
-      break;
-    case 30:
-      s_bitmap_battery = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_SHARP030);
-      break;
-    case 20:
-      s_bitmap_battery = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_SHARP020);
-      break;
-    case 10:
-      s_bitmap_battery = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_SHARP010);
-      break;
-    default:
-      s_bitmap_battery = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_SHARP000);
-      break;
+static void batt_update_proc(Layer *layer, GContext *ctx) {
+  GRect red1 = GRect(36, 10, 8, 8);
+  GRect red2 = GRect(44, 10, 8, 8);
+  GRect orange1 = GRect(52, 10, 8, 8);
+  GRect orange2 = GRect(60, 10, 8, 8);
+  GRect yellow1 = GRect(68, 10, 8, 8);
+  GRect yellow2 = GRect(76, 10, 8, 8);
+  GRect green1 = GRect(84, 10, 8, 8);
+  GRect green2 = GRect(92, 10, 8, 8);
+  GRect blue = GRect(100, 10, 8, 8);
+  GRect white = GRect(108, 10, 4, 8);
+
+  if (s_battery_level > 0) {
+    graphics_context_set_fill_color(ctx, PBL_IF_BW_ELSE(GColorWhite, GColorRed));
+    graphics_fill_rect(ctx, red1, 0, GCornersAll);
+    if (s_battery_level > 10) {
+      graphics_fill_rect(ctx, red2, 0, GCornersAll);
+      if (s_battery_level > 20) {
+        graphics_context_set_fill_color(ctx, GColorRajah);
+        graphics_fill_rect(ctx, orange1, 0, GCornersAll);
+        if (s_battery_level > 30) {
+          graphics_fill_rect(ctx, orange2, 0, GCornersAll);
+          if (s_battery_level > 40) {
+            graphics_context_set_fill_color(ctx, GColorYellow);
+            graphics_fill_rect(ctx, yellow1, 0, GCornersAll);
+            if (s_battery_level > 50) {
+              graphics_fill_rect(ctx, yellow2, 0, GCornersAll);
+              if (s_battery_level > 60) {
+                graphics_context_set_fill_color(ctx, GColorGreen);
+                graphics_fill_rect(ctx, green1, 0, GCornersAll);
+                if (s_battery_level > 70) {
+                  graphics_fill_rect(ctx, green2, 0, GCornersAll);
+                  if (s_battery_level > 80) {
+                    graphics_context_set_fill_color(ctx, PBL_IF_BW_ELSE(GColorWhite, GColorLiberty));
+                    graphics_fill_rect(ctx, blue, 0, GCornersAll);
+                    if (s_battery_level > 90) {
+                      graphics_context_set_fill_color(ctx, GColorWhite);
+                      graphics_fill_rect(ctx, white, 0, GCornersAll);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 
 static void battery_callback(BatteryChargeState state) {
   s_battery_level = state.charge_percent;
-  update_battery();
+  layer_mark_dirty(s_batt_layer);
 }
 
 static void bluetooth_callback(bool connected) {
@@ -101,9 +114,9 @@ static void prv_window_load(Window *window) {
 
   s_background_layer = bitmap_layer_create(GRect(0, 20, bounds.size.w, 65));
   bitmap_layer_set_compositing_mode(s_background_layer, GCompOpSet);
-  s_bitmap_poogie = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_POOGIE);
-  s_bitmap_poogie_angry = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_POOGIE_ANGRY);
-  s_bitmap_poogie_heart = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_POOGIE_HEART);
+  s_bitmap_poogie = gbitmap_create_with_resource(PBL_IF_BW_ELSE(RESOURCE_ID_IMAGE_POOGIEBW, RESOURCE_ID_IMAGE_POOGIE));
+  s_bitmap_poogie_angry = gbitmap_create_with_resource(PBL_IF_BW_ELSE(RESOURCE_ID_IMAGE_POOGIEBW_ANGRY, RESOURCE_ID_IMAGE_POOGIE_ANGRY));
+  s_bitmap_poogie_heart = gbitmap_create_with_resource(PBL_IF_BW_ELSE(RESOURCE_ID_IMAGE_POOGIEBW_HEART, RESOURCE_ID_IMAGE_POOGIE_HEART));
   bitmap_layer_set_bitmap(s_background_layer, s_bitmap_poogie);
   layer_add_child(window_layer, bitmap_layer_get_layer(s_background_layer));
 
@@ -126,9 +139,14 @@ static void prv_window_load(Window *window) {
   s_battery_layer = bitmap_layer_create(GRect(0, 2, bounds.size.w, 25));
   bitmap_layer_set_compositing_mode(s_battery_layer, GCompOpSet);
   bitmap_layer_set_alignment(s_battery_layer, GAlignCenter);
-  battery_callback(battery_state_service_peek());
+  s_bitmap_battery = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_SHARP000);
   bitmap_layer_set_bitmap(s_battery_layer, s_bitmap_battery);
-  layer_add_child(window_layer, bitmap_layer_get_layer(s_battery_layer));  
+  layer_add_child(window_layer, bitmap_layer_get_layer(s_battery_layer));
+
+  s_batt_layer = layer_create(bounds);
+  layer_set_update_proc(s_batt_layer, batt_update_proc);
+  battery_callback(battery_state_service_peek());
+  layer_add_child(window_layer, s_batt_layer);
 
   bluetooth_callback(connection_service_peek_pebble_app_connection());
 }
