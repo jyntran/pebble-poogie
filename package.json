@@ -1,12 +1,12 @@
 {
-  "name": "Poogie",
+  "name": "Monster Hunter: Poogie",
   "author": "jyntran",
   "version": "1.0.0",
   "keywords": ["pebble-app"],
   "private": true,
   "dependencies": {},
   "pebble": {
-    "displayName": "poogie",
+    "displayName": "Poogie",
     "uuid": "da05ec9f-fe2b-4587-9f28-ecabda1c6a4b",
     "sdkVersion": "3",
     "enableMultiJS": true,
